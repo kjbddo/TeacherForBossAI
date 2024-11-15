@@ -67,7 +67,6 @@ def ask(questionId):
         external_response = requests.post(target_server_url, headers=headers, json=payload)
         external_response.raise_for_status()  # 오류가 발생하면 예외를 일으킴
 
-        # 외부 서버의 응답을 클라이언트에게 전달
         return jsonify({
             "status": "success",
             "forwarded_response": external_response.json()

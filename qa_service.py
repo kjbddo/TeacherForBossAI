@@ -9,7 +9,7 @@ def create_prompt(category: str, content: str, extra_data: dict, relevant_text: 
     """카테고리 및 추가 데이터에 따라 동적으로 프롬프트를 생성"""
 
     # 기본적인 프롬프트 구조 설정
-    prompt_template = "자영업 관련하여 다음과 같은 구체적은 해결책을 제공합니다. 마지막에는 항상 전문가와의 상담을 권고합니다.\n\n"
+    prompt_template = "자영업 관련하여 다음과 같은 구체적인 해결책을 제공합니다. 마지막에는 항상 전문가와의 상담을 권고합니다.\n\n"
 
     # 관련 텍스트가 있으면 추가
     if relevant_text:
@@ -17,7 +17,7 @@ def create_prompt(category: str, content: str, extra_data: dict, relevant_text: 
 
     # 카테고리별 프롬프트 구성
     if category == "노하우" or category == "상권":
-        prompt_template += "상세한 자영업 노하우를 바탕으로 한 매장 운영 조언을 드립니다.\n"
+        prompt_template += "상세한 자영업 노하우를 바탕으로 한 매장 운영 조언을 예시를 들어 제공합니다.\n"
         if extra_data:
             if extra_data.get("bossType"):
                 prompt_template += f"- 창업자 유형: {extra_data['bossType']}\n"
@@ -33,7 +33,7 @@ def create_prompt(category: str, content: str, extra_data: dict, relevant_text: 
                 prompt_template += f"- 가용 예산: {extra_data['budget']}\n"
 
     elif category == "세무":
-        prompt_template += "자영업자를 위한 세무 조언을 제공합니다.\n"
+        prompt_template += "구체적인 세무 조언을 예시를 들어 제공합니다.\n"
         if extra_data:
             if extra_data.get("taxBookKeepingStatus"):
                 prompt_template += f"- 세무 기장 상태: {extra_data['taxBookKeepingStatus']}\n"
@@ -49,7 +49,7 @@ def create_prompt(category: str, content: str, extra_data: dict, relevant_text: 
                 prompt_template += f"- 매출 규모: {extra_data['salesScale']}\n"
 
     elif category == "직원관리":
-        prompt_template += "자영업 매장의 직원 관리와 관련된 조언을 제공합니다.\n"
+        prompt_template += "구체적인 직원 관리와 관련된 조언을 예시를 들어 제공합니다.\n"
         if extra_data:
             if extra_data.get("contractStatus"):
                 prompt_template += f"- 근로계약서 상태: {extra_data['contractStatus']}\n"
@@ -71,7 +71,7 @@ def create_prompt(category: str, content: str, extra_data: dict, relevant_text: 
 class QAService:
     """질의응답(QA) 서비스 관리 클래스."""
 
-    def __init__(self, db_directory: str, model_name="gpt-4o", temperature=0.1, max_tokens=3500):
+    def __init__(self, db_directory: str, model_name="gpt-4", temperature=0.1, max_tokens=3500):
         self.db_directory = db_directory
         self.embedding = OpenAIEmbeddings()
         self.llm = ChatOpenAI(
@@ -114,3 +114,15 @@ class QAService:
         # 응답 및 토큰 사용량 정보 반환
         return llm_response
 
+if __name__ == "__main__":
+    model = QAService('data/vector_db').qacall("노하우","새로운 정식 메뉴에 반찬으로 수육을 내려고 하는데요\n\n직접 삶아서 갓 먹으면 부들부들한데\n좀만 시간 지나도 좀 거무잡잡해지고 퍽퍽해지더라구요\n그렇다고 손님 올 때마다 삶을 수도 없고..\n\n근데 주변 프랜차이즈 보쌈집에서 시켜 먹으면.\n촉촉하고 부드럽더라고요\n\n장사가 잘 되는 집이면 회전이 잘 되겠거니 하는데\n리뷰가 그렇게 많지 않은 신생 프랜차이즈 보쌈수육집도 무슨\n부드럽고 맛있더라구요??\n\n제가 주문하자마자 삶았을 리는 없을텐데요 ..\n\n납품받은 거 살짝 쪄서 내는 것보단\n직접 하는게 나을 것 같은데\n어떻게 퀄리티를 유지하는지 꿀팁 좀 얻을 수 있을까요?\n\n아니면 프랜차이즈에서 쓰는 보쌈수육을 좀 발주해서 쓰고 싶습니다",{
+        "type": "market",
+        "bossType": "STORE_OWNER",
+        "businessType": "건강식 전문점(곡물밥, 저염 반찬, 버섯탕 등)",
+        "location": "서울 서초구 사무실 밀집 지역",
+        "customerType": "30~50대 직장인 등 중장년층",
+        "storeInfo": "월매출 2500",
+        "budget": "10만"
+    })
+
+    print(model)
