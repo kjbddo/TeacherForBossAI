@@ -71,7 +71,7 @@ def create_prompt(category: str, content: str, extra_data: dict, relevant_text: 
 class QAService:
     """질의응답(QA) 서비스 관리 클래스."""
 
-    def __init__(self, db_directory: str, model_name="gpt-3.5-turbo-0125", temperature=0.1, max_tokens=3500):
+    def __init__(self, db_directory: str, model_name="gpt-4o", temperature=0.1, max_tokens=3500):
         self.db_directory = db_directory
         self.embedding = OpenAIEmbeddings()
         self.llm = ChatOpenAI(
