@@ -1,7 +1,7 @@
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma  # 새로운 import 방식으로 변경
 from langchain_community.callbacks.manager import get_openai_callback
 
 
@@ -83,8 +83,11 @@ class QAService:
         )
         self.output_parser = StrOutputParser()
         # 벡터 데이터베이스 로드
-        self.vectordb = Chroma(persist_directory=self.db_directory, embedding_function=self.embedding).as_retriever()
-
+        self.vectordb = Chroma(
+                    persist_directory=self.db_directory, 
+                    embedding_function=self.embedding
+                ).as_retriever()
+        
     def retrieve_relevant_text(self, content: str, num_results: int = 3) -> str:
         """벡터 데이터베이스에서 관련 문서를 검색하여 반환"""
         results = self.vectordb.get_relevant_documents(content)
