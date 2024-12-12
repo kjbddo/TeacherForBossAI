@@ -1,3 +1,4 @@
+'''
 from flask import Blueprint, jsonify
 from langchain_openai import OpenAIEmbeddings
 from app.services.db_service import PDFConverter, VectorDBSetup
@@ -17,3 +18,4 @@ def setup_db():
         db_directory=Config.VECTOR_DB_PATH
     )
     return jsonify(response)
+'''

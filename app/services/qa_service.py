@@ -1,7 +1,7 @@
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_chroma import Chroma  # 새로운 import 방식으로 변경
+from langchain_chroma import Chroma  
 from langchain_community.callbacks.manager import get_openai_callback
 
 
@@ -71,38 +71,43 @@ def create_prompt(category: str, content: str, extra_data: dict, relevant_text: 
 class QAService:
     """질의응답(QA) 서비스 관리 클래스."""
 
-    def __init__(self, db_directory: str, model_name="gpt-4", temperature=0.1, max_tokens=3500):
-        self.db_directory = db_directory
+    def __init__(self, model_name="gpt-4", temperature=0.1, max_tokens=4500):
+        #self.db_directory = db_directory
         self.embedding = OpenAIEmbeddings()
         self.llm = ChatOpenAI(
             model=model_name,
             temperature=temperature,
             max_tokens=max_tokens,
-            presence_penalty=0.5,
-            frequency_penalty=0.5
+            #presence_penalty=0.5,
+            #frequency_penalty=0.5
         )
         self.output_parser = StrOutputParser()
+        
+        '''
         # 벡터 데이터베이스 로드
         self.vectordb = Chroma(
                     persist_directory=self.db_directory, 
                     embedding_function=self.embedding
                 ).as_retriever()
-        
+        '''
+    '''
     def retrieve_relevant_text(self, content: str, num_results: int = 3) -> str:
         """벡터 데이터베이스에서 관련 문서를 검색하여 반환"""
         results = self.vectordb.get_relevant_documents(content)
         # 검색된 텍스트들을 연결하여 반환
         relevant_texts = "\n".join([res.page_content for res in results[:num_results]])
         return relevant_texts
+    '''
 
     def qacall(self, category: str, content: str, extra_data: dict):
         """질의응답 실행"""
 
         # 벡터 DB에서 관련 문서 검색
-        relevant_text = self.retrieve_relevant_text(content)
+        #relevant_text = self.retrieve_relevant_text(content)
 
         # 검색된 내용을 바탕으로 프롬프트 생성
-        prompt_text = create_prompt(category, content, extra_data, relevant_text)
+        #prompt_text = create_prompt(category, content, extra_data, relevant_text)
+        prompt_text = create_prompt(category, content, extra_data)
         prompt = ChatPromptTemplate.from_messages([
             ("system", prompt_text)
         ])
@@ -118,7 +123,7 @@ class QAService:
         return llm_response
 
 if __name__ == "__main__":
-    model = QAService('data/vector_db').qacall("노하우","새로운 정식 메뉴에 반찬으로 수육을 내려고 하는데요\n\n직접 삶아서 갓 먹으면 부들부들한데\n좀만 시간 지나도 좀 거무잡잡해지고 퍽퍽해지더라구요\n그렇다고 손님 올 때마다 삶을 수도 없고..\n\n근데 주변 프랜차이즈 보쌈집에서 시켜 먹으면.\n촉촉하고 부드럽더라고요\n\n장사가 잘 되는 집이면 회전이 잘 되겠거니 하는데\n리뷰가 그렇게 많지 않은 신생 프랜차이즈 보쌈수육집도 무슨\n부드럽고 맛있더라구요??\n\n제가 주문하자마자 삶았을 리는 없을텐데요 ..\n\n납품받은 거 살짝 쪄서 내는 것보단\n직접 하는게 나을 것 같은데\n어떻게 퀄리티를 유지하는지 꿀팁 좀 얻을 수 있을까요?\n\n아니면 프랜차이즈에서 쓰는 보쌈수육을 좀 발주해서 쓰고 싶습니다",{
+    model = QAService().qacall("노하우","새로운 정식 메뉴에 반찬으로 수육을 내려고 하는데요\n\n직접 삶아서 갓 먹으면 부들부들한데\n좀만 시간 지나도 좀 거무잡잡해지고 퍽퍽해지더라구요\n그렇다고 손님 올 때마다 삶을 수도 없고..\n\n근데 주변 프랜차이즈 보쌈집에서 시켜 먹으면.\n촉촉하고 부드럽더라고요\n\n장사가 잘 되는 집이면 회전이 잘 되겠거니 하는데\n리뷰가 그렇게 많지 않은 신생 프랜차이즈 보쌈수육집도 무슨\n부드럽고 맛있더라구요??\n\n제가 주문하자마자 삶았을 리는 없을텐데요 ..\n\n납품받은 거 살짝 쪄서 내는 것보단\n직접 하는게 나을 것 같은데\n어떻게 퀄리티를 유지하는지 꿀팁 좀 얻을 수 있을까요?\n\n아니면 프랜차이즈에서 쓰는 보쌈수육을 좀 발주해서 쓰고 싶습니다",{
         "type": "market",
         "bossType": "STORE_OWNER",
         "businessType": "건강식 전문점(곡물밥, 저염 반찬, 버섯탕 등)",

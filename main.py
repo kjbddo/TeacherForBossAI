@@ -3,6 +3,7 @@ from flask_cors import CORS
 from config.config import Config
 from app.routes.qa_routes import qa_bp
 from app.routes.setup_routes import setup_bp
+from app.routes.health_routes import health_bp
 from utils.error_handlers import register_error_handlers
 import logging
 
@@ -21,6 +22,7 @@ def create_app():
     # 블루프린트 등록
     app.register_blueprint(qa_bp)
     app.register_blueprint(setup_bp)
+    app.register_blueprint(health_bp)
     
     # 에러 핸들러 등록
     register_error_handlers(app)

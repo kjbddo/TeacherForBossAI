@@ -1,5 +1,5 @@
 # db_setup.py
-
+'''
 import glob
 import logging
 import os
@@ -8,6 +8,7 @@ import fitz  # PyMuPDF
 from langchain.schema import Document
 from langchain_community.document_loaders import DirectoryLoader, TextLoader
 from langchain_community.vectorstores import Chroma
+from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 #this modules need for OCR(not installed in venv)
@@ -86,6 +87,12 @@ class VectorDBSetup:
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=self.chunk_size, chunk_overlap=self.chunk_overlap)
         return text_splitter.split_documents(documents)
 
+if __name__ == "__main__":
+    pdf_converter = PDFConverter()
+    pdf_converter.convert_pdf_to_text("data/pdf", "data/txt")
+    db_service = VectorDBSetup(embedding=OpenAIEmbeddings())
+    db_service.setup_vector_db("data/txt", "data/vector_db")
+'''
 
 # class PDFConverterOCR:
 #     """PDF 파일을 텍스트 파일로 변환하는 클래스."""

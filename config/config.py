@@ -4,9 +4,11 @@ import os
 load_dotenv()
 
 class Config:
+    '''
     VECTOR_DB_PATH = 'data/vector_db'
     TXT_DIR_PATH = 'data/txt'
     PDF_DIR_PATH = 'data/pdf'
+    '''
     BASE_TARGET_URL = os.getenv('TARGET_SERVER_URL', 'https://dev.teacherforboss.store/board/teacher/questions')
     OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
     DEBUG_MODE = os.getenv('FLASK_DEBUG', 'false').lower() == 'true'

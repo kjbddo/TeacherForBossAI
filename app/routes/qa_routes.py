@@ -11,7 +11,8 @@ logger = logging.getLogger(__name__)
 qa_bp = Blueprint('qa', __name__)
 
 # QA 서비스 인스턴스 생성
-qa_service = QAService(db_directory=Config.VECTOR_DB_PATH)
+#qa_service = QAService(db_directory=Config.VECTOR_DB_PATH)
+qa_service = QAService()
 
 @qa_bp.route('/<int:questionId>/answers', methods=['POST'])
 @token_required

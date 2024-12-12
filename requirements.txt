@@ -1,0 +1,12 @@
+flask==3.0.0
+flask-cors==4.0.0
+python-dotenv==1.0.0
+langchain==0.1.0
+langchain-openai==0.0.2
+langchain-community==0.0.13
+langchain-core==0.1.10
+chromadb==0.4.22
+pymupdf==1.23.8
+requests==2.31.0
+psutil==5.9.5
+gunicorn==21.2.0 
